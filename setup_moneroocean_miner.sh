@@ -138,6 +138,10 @@ echo
 echo "JFYI: This host has $CPU_THREADS CPU threads, so projected Monero hashrate is around $EXP_MONERO_HASHRATE KH/s."
 echo
 
+echo "Sleeping for 05 seconds before continuing (press Ctrl+C to cancel)"
+sleep 05
+echo
+
 echo "Install CPU Limit"
 apt-get install cpulimit
 echo
