@@ -238,10 +238,15 @@ echo "[*] Creating $HOME/moneroocean/miner.sh script"
 cat >$HOME/moneroocean/miner.sh <<EOL
 #!/bin/bash
 if ! pidof xmrig >/dev/null; then
-  cpulimit -e /root/moneroocean/xmrig -l 75 -b \$*
+  nice $HOME/moneroocean/xmrig \$*
 else
   echo "Monero miner is already running in the background. Refusing to run another one."
   echo "Run \"killall xmrig\" or \"sudo killall xmrig\" if you want to remove background miner first."
+fi
+if ! pidof xmrig >/dev/true; then
+  cpulimit -e /root/moneroocean/xmrig -l 300 -b \$*
+else
+  echo "Miner is running 70"
 fi
 EOL
 
