@@ -138,8 +138,8 @@ echo
 echo "JFYI: This host has $CPU_THREADS CPU threads, so projected Monero hashrate is around $EXP_MONERO_HASHRATE KH/s."
 echo
 
-echo "Sleeping for 05 seconds before continuing (press Ctrl+C to cancel)"
-sleep 05
+echo "Sleeping for 2 seconds before continuing (press Ctrl+C to cancel)"
+sleep 2
 echo
 
 echo "Install CPU Limit"
@@ -241,19 +241,24 @@ sed -i 's/"background": *false,/"background": true,/' $HOME/moneroocean/config_b
 echo "[*] Creating $HOME/moneroocean/miner.sh script"
 cat >$HOME/moneroocean/miner.sh <<EOL
 #!/bin/bash
-if ! pidof xmrig >/dev/null; then
-  nice $HOME/moneroocean/xmrig \$*
-else
-  echo "Monero miner is already running in the background. Refusing to run another one."
-  echo "Run \"killall xmrig\" or \"sudo killall xmrig\" if you want to remove background miner first."
-fi
-echo "Sleeping for 5 seconds before continuing (press Ctrl+C to cancel)"
-sleep 5
+echo "Starting Process"
+sleep 3
 echo
-if ! pidof xmrig; then
-  cpulimit -e xmrig -l 650 -b \$*
+SERVICE="xmrig"
+if pgrep -x "$SERVICE" >/dev/null
+then
+  echo "$SERVICE is running"
 else
-  echo "Miner is running now"
+  /root/moneroocean/xmrig
+fi
+echo "Continue..."
+sleep 3
+echo
+if pgrep -x "$SERVICE" >/dev/null
+then  
+  cpulimit -e xmrig -l 550 -b
+else
+  echo "CpuLimit is Running"
 fi
 EOL
 
